@@ -1,6 +1,6 @@
 function [x, u, x1_limit, sig, beta] = run_mpc()
 % (S)MPC setup by Tim Bruedigam
-% based on the nonlinear MPC routine by L. Gruene and J. Pannek (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
+% based on the nonlinear MPC routine by Gruene and Pannek (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
 % example system based on Lorenzen et al. 2017: Constraint-Tightening and Stability in Stochastic Model Predictive Control
 
     clear all;
