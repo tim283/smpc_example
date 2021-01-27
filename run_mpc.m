@@ -3,7 +3,6 @@ function [x, u, x1_limit, sig, beta] = run_mpc()
 % based on the nonlinear MPC routine by L. Gruene and J. Pannek (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
 % example system based on Lorenzen et al. 2017: Constraint-Tightening and Stability in Stochastic Model Predictive Control
 
-    addpath('./nmpcroutine');
     clear all;
     close all;
     
@@ -88,7 +87,6 @@ function [x, u, x1_limit, sig, beta] = run_mpc()
          type, atol_ode_real, rtol_ode_real, atol_ode_sim, rtol_ode_sim, ...
          iprint, @printHeader, @printClosedloopData, @plotTrajectories);
 
-    rmpath('./nmpcroutine');
     
 %     legend('real state','next predicted step','Location','southwest')
 end
