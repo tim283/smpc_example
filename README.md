@@ -10,9 +10,9 @@ SMPC_introduction.pdf serves as a brief introduction to the example and (S)MPC w
 run_mpc.m allows simple changes to the (SMPC) algorithm (see lines 8 - 52). 
 The following options exist:
 1) MPC,  no constraint, no uncertainty
-2) MPC,  x1-constraint, no uncertainty
-3) MPC,  x1-constraint, uncertainty
-4) SMPC, x1-constraint, uncertainty
+2) MPC,  constraint, no uncertainty
+3) MPC,  constraint, uncertainty
+4) SMPC, (chance) constraint, uncertainty
 
 Constraint tightening is computed in nmpc.m (see lines 428 - 442)
 
