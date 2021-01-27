@@ -21,4 +21,4 @@ If you find mistakes or have suggestions, feel free to contribute!
 
 
 ---
-[1] L. Grueune and J. Pannek. Nonlinear Model Predictive Control. Springer-Verlag, London, 2017.
+[1] L. Grüne and J. Pannek. Nonlinear Model Predictive Control. Springer-Verlag, London, 2017.
