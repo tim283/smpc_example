@@ -4,7 +4,7 @@
 [x,u, x1_limit, sig, beta, s]= run_mpc;
 
 
-%% plot input and states
+%% plot input and states 
 
 % set up figure for input and states
 figure(2)
