@@ -1,7 +1,8 @@
-% plot inputs and states
+% plot inputs and states 
 
 %% run smpc (runs new MPC simulation)
 [x,u, x1_limit, sig, beta, s]= run_mpc;
+
 
 
 %% plot input and states
