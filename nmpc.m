@@ -311,7 +311,7 @@ function [t, x, u] = nmpc(runningcosts, terminalcosts, ...
     end
 
     %% MPC optimization
-    
+        
     warning off all
     t = [];
     x = [];
