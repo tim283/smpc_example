@@ -1,18 +1,21 @@
 % plot inputs and states
 
-%% run smpc (uncomment to rerun MPC simulation)
+%% run smpc (runs new MPC simulation)
 [x,u, x1_limit, sig]= run_mpc;
 
 
-%% plot inputs and states
+%% plot input and states
+
+% set up figure for input and states
 figure(2)
 clf
 
-plot_noise = 0; % only plot noise if seed is selected in run_mpc script
+plot_noise = 0;         % only plot noise if seed is selected in run_mpc script
 
-steps = 0:length(x)-1;
+steps = 0:length(x)-1;  % get steps (last input is computed but not applied) 
 
-% x1 state
+
+% state x1
 if plot_noise == 0
     subplot(3,1,1)
 else
@@ -27,7 +30,8 @@ ylim([-0.5 x1_limit+0.5]);
 xlim([steps(1) steps(end)]);
 hold off
 
-% x2 state
+
+% state x2
 if plot_noise == 0
     subplot(3,1,2)
 else
@@ -41,7 +45,8 @@ ylim([-0.5 5.5]);
 xlim([steps(1) steps(end)]);
 hold off
 
-% u input
+
+% input u
 if plot_noise == 0
     subplot(3,1,3)
 else
@@ -73,6 +78,7 @@ for i = 1: length(x)
     w(i,2) = normrnd(0,sig);
 end
 
+% plot subplots with noise
 if plot_noise == 1
     subplot(3,2,2)
     hold on
