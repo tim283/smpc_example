@@ -3,9 +3,11 @@ function [t, x, u] = nmpc(runningcosts, terminalcosts, ...
               linearconstraints, system, cov_propagation, ...
               mpciterations, N, T, tmeasure, xmeasure, u0, ...
               sig, beta, params, ...
-              varargin)
-              
+              varargin)              
 % nmpc.m routine by L. Gruene and J. Pannek (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
+
+% MPC optimization starts at line 313
+% constraint tightening starts at line 430
               
 % nmpc(runningcosts, terminalcosts, constraints, ...
 %      terminalconstraints, linearconstraints, system, ...
@@ -308,6 +310,8 @@ function [t, x, u] = nmpc(runningcosts, terminalcosts, ...
         end
     end
 
+    %% MPC optimization
+    
     warning off all
     t = [];
     x = [];
@@ -422,8 +426,7 @@ function [c,ceq] = nonlinearconstraints(constraints, ...
                                 atol_ode_sim, rtol_ode_sim, type, sig);
     c = [];
     ceq = [];
-    
-    
+        
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%% constraint tightening computation (& constraint generation)%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

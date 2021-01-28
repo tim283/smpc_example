@@ -14,7 +14,7 @@ The following options exist:
 3) MPC with constraint,  uncertainty
 4) SMPC with (chance) constraint, uncertainty
 
-Constraint tightening is computed in nmpc.m (see lines 428 - 442)
+Constraint tightening is computed in nmpc.m (see lines 430 - 452)
 
 
 If you find mistakes or have suggestions, feel free to contribute!
