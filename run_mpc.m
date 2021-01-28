@@ -72,10 +72,10 @@ function [x, u, x1_limit, sig, beta, s] = run_mpc()
     rtol_ode_sim  = 1e-4;
         
     tmeasure      = 0.0;            % initial time (do not change)
-    
-
-    
+        
     params = [x1_limit, plot_pause]; % parameters necessary for optimal control problem
+    
+    % random number generator settings
 %     rng(2,'twister');               % seed selection: change to get different noise
     rng('shuffle');                 % random seed
     s = rng;                        % save rng setting
@@ -90,7 +90,6 @@ function [x, u, x1_limit, sig, beta, s] = run_mpc()
          iprint, @printHeader, @printClosedloopData, @plotTrajectories);
 
     
-%     legend('real state','next predicted step','Location','southwest')
 end
 
 

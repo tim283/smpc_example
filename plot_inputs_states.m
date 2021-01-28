@@ -10,7 +10,7 @@
 figure(2)
 clf
 
-plot_noise = 1;         % only plot noise if seed is selected in run_mpc script
+plot_noise = 1;         % plot noise? 0: no; 1: yes
 
 steps = 0:length(x)-1;  % get steps (last input is computed but not applied) 
 
@@ -81,19 +81,40 @@ end
 
 % plot subplots with noise
 if plot_noise == 1
+    
+    w_max = max(max(abs(w))); % get largest uncertainty  
+        
+    
     subplot(3,2,2)
     hold on
-    title('noise - x1', 'Linewidth',0.8)
-    plot(w(:,1), 'b')
+    title('noise - w1')
+    plot(steps, w(:,1), 'b', 'Linewidth',0.8)
+    % plot standard deviation
+    yline(sig,'r:', 'Linewidth',0.8)
+    yline(-sig,'r:', 'Linewidth',0.8)
+    ylim([-1.2*w_max 1.2*w_max])
     grid on
     hold off
-
-    subplot(3,2,4)
+    
+        subplot(3,2,4)
     hold on
-    title('noise - x2', 'Linewidth',0.8)
-    plot(w(:,2), 'b')
+    title('noise - w2')
+    plot(steps, w(:,2), 'b', 'Linewidth',0.8)
+    % plot standard deviation
+    yline(sig,'r:', 'Linewidth',0.8)
+    yline(-sig,'r:', 'Linewidth',0.8)
+    ylim([-1.2*w_max 1.2*w_max])
     grid on
     hold off
+    
+    % plot noise in state plots
+%     subplot(3,2,1)
+%     hold on 
+%     plot(steps, w(:,1), 'b--', 'Linewidth',0.8)    
+%     subplot(3,2,3)
+%     hold on 
+%     plot(steps, w(:,2), 'b--', 'Linewidth',0.8)
+    
 end
 
 
