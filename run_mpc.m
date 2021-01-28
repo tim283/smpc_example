@@ -118,11 +118,11 @@ end
 
 function [c,ceq] = constraints(t, x, u, gamma, K, params)
 
-    x1_limit = params(1);
+    x1_limit = params(1);                       % get x1 constraint
     
     c   = [];
     
-    % input limitations
+    % input limitations (new input)
     c(end+1) = (u(1) - K*[x(1); x(2)]) - 0.2;
     c(end+1) = -(u(1) - K*[x(1); x(2)]) - 0.2;
     
@@ -233,8 +233,9 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
                       
     [x, t_intermediate, x_intermediate] = dynamic(system, T, t0, ...
                                           x0, u, atol_ode, rtol_ode, type, 0, 0);
+                                      
+    % set up figure
     figure(1);
-%     subplot(1,2,1)
         title('x_1/x_2 trajectory');
         xlabel('x_1');
         ylabel('x_2');
@@ -244,8 +245,9 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         grid on;
         hold on;
         
-        % x1 - limit
+        % initial plot details
         if t0 == 0
+            % x1 - limit
             x1_limit = params(1);
             h1=xline(x1_limit);
             h2=fill([x1_limit x1_limit x1_limit+100 x1_limit+100],[-1000 1000 1000 -1000],'black','FaceColor',[0 0 0],'FaceAlpha',0.1,'LineStyle','none');
@@ -273,19 +275,16 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         axis([-2.5 6.0 -2 6.5]);
         axis square;
                 
-        
-        
+               
         % show prediction
         x_pred = zeros(length(u), length(x));
-        x_pred(1,:) = x0;
-        
+        x_pred(1,:) = x0;        
         for i = 2:length(u)
             x_pred(i,:) = system(0, x_pred(i-1,:), u(1,i-1), T, 0);
-        end
-        
+        end        
         hm = plot(x_pred(:,1),x_pred(:,2),'mx-','Linewidth',0.5, 'Markersize', 9);
         
-        % legend
+        % legend (only once)
         if t0 == 0
             legend([hb,hr,hm],{'real state','next predicted step','prediction'},'Location','northwest', 'FontSize',10,'AutoUpdate','off')
         end
@@ -296,7 +295,6 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         % delete predicted inputs
         children = get(gca, 'children');
         delete(children(1));
-
         
 
 
