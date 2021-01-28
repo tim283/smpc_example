@@ -1,4 +1,4 @@
-function [x, u, x1_limit, sig, beta] = run_mpc()
+function [x, u, x1_limit, sig, beta, s] = run_mpc()
 % (S)MPC setup by Tim Bruedigam
 % based on the nonlinear MPC routine by Gruene and Pannek (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
 % example system based on Lorenzen et al. 2017: Constraint-Tightening and Stability in Stochastic Model Predictive Control
@@ -64,7 +64,7 @@ function [x, u, x1_limit, sig, beta] = run_mpc()
     % optimizatoin options
     tol_opt       = 1e-8;
     opt_option    = 0;
-    iprint        = 10;
+    iprint        = 10;             % see nmpc.m line 81+
     type          = 'difference equation';
     atol_ode_real = 1e-12;
     rtol_ode_real = 1e-12;
@@ -72,11 +72,13 @@ function [x, u, x1_limit, sig, beta] = run_mpc()
     rtol_ode_sim  = 1e-4;
         
     tmeasure      = 0.0;            % initial time (do not change)
-    
-
-    
+        
     params = [x1_limit, plot_pause]; % parameters necessary for optimal control problem
-%     rng(2,'twister'); % seed selection: change to get different noise
+    
+    % random number generator settings
+%     rng(2,'twister');               % seed selection: change to get different noise
+    rng('shuffle');                 % random seed
+    s = rng;                        % save rng setting
     
     % run mpc
     [t,x,u] = nmpc(@runningcosts, @terminalcosts, @constraints, ...
@@ -88,7 +90,6 @@ function [x, u, x1_limit, sig, beta] = run_mpc()
          iprint, @printHeader, @printClosedloopData, @plotTrajectories);
 
     
-%     legend('real state','next predicted step','Location','southwest')
 end
 
 
@@ -118,11 +119,11 @@ end
 
 function [c,ceq] = constraints(t, x, u, gamma, K, params)
 
-    x1_limit = params(1);
+    x1_limit = params(1);                       % get x1 constraint
     
     c   = [];
     
-    % input limitations
+    % input limitations (after input decomposition)
     c(end+1) = (u(1) - K*[x(1); x(2)]) - 0.2;
     c(end+1) = -(u(1) - K*[x(1); x(2)]) - 0.2;
     
@@ -176,8 +177,7 @@ function y = system(t, x, u, T, apply_flag, sig)
         % Gaussian noise with variance sig^2
         w(1) = normrnd(0,sig);
         w(2) = normrnd(0,sig);
-        w;
-        % determine next state
+        % determine next state with uncertainty
         y = y + D*w;
     end
             
@@ -217,12 +217,12 @@ end
 % Definition of output format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function printHeader()
-    fprintf('   k  |      u(k)        x(1)        x(2)     Time\n');
-    fprintf('--------------------------------------------------\n');
+    fprintf('   k  |       u(k)         x(1)        x(2)       Time   | Solver messages\n');
+    fprintf('--------------------------------------------------------------------------\n');
 end
 
 function printClosedloopData(mpciter, u, x, t_Elapsed)
-    fprintf(' %3d  | %+11.6f %+11.6f %+11.6f  %+6.3f', mpciter, ...
+    fprintf(' %3d  | %+11.3f %+11.2f %+11.2f      %+6.3f  |', mpciter, ...
             u(1,1) - [0.2858 -0.4910]*[x(1); x(2)], x(1), x(2), t_Elapsed);
 end
 
@@ -233,8 +233,9 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
                       
     [x, t_intermediate, x_intermediate] = dynamic(system, T, t0, ...
                                           x0, u, atol_ode, rtol_ode, type, 0, 0);
+                                      
+    % set up figure
     figure(1);
-%     subplot(1,2,1)
         title('x_1/x_2 trajectory');
         xlabel('x_1');
         ylabel('x_2');
@@ -244,8 +245,9 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         grid on;
         hold on;
         
-        % x1 - limit
+        % initial plot details
         if t0 == 0
+            % x1 - limit
             x1_limit = params(1);
             h1=xline(x1_limit);
             h2=fill([x1_limit x1_limit x1_limit+100 x1_limit+100],[-1000 1000 1000 -1000],'black','FaceColor',[0 0 0],'FaceAlpha',0.1,'LineStyle','none');
@@ -273,19 +275,16 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         axis([-2.5 6.0 -2 6.5]);
         axis square;
                 
-        
-        
+               
         % show prediction
         x_pred = zeros(length(u), length(x));
-        x_pred(1,:) = x0;
-        
+        x_pred(1,:) = x0;        
         for i = 2:length(u)
             x_pred(i,:) = system(0, x_pred(i-1,:), u(1,i-1), T, 0);
-        end
-        
+        end        
         hm = plot(x_pred(:,1),x_pred(:,2),'mx-','Linewidth',0.5, 'Markersize', 9);
         
-        % legend
+        % legend (only once)
         if t0 == 0
             legend([hb,hr,hm],{'real state','next predicted step','prediction'},'Location','northwest', 'FontSize',10,'AutoUpdate','off')
         end
@@ -296,7 +295,6 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         % delete predicted inputs
         children = get(gca, 'children');
         delete(children(1));
-
         
 
 
