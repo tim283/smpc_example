@@ -1,7 +1,7 @@
 % plot inputs and states
 
 %% run smpc (runs new MPC simulation)
-[x,u, x1_limit, sig]= run_mpc;
+[x,u, x1_limit, sig, beta, s]= run_mpc;
 
 
 %% plot input and states
@@ -10,7 +10,7 @@
 figure(2)
 clf
 
-plot_noise = 0;         % only plot noise if seed is selected in run_mpc script
+plot_noise = 1;         % only plot noise if seed is selected in run_mpc script
 
 steps = 0:length(x)-1;  % get steps (last input is computed but not applied) 
 
@@ -69,7 +69,8 @@ hold off
 
 
 % plot noise (given seeding)
-rng(2,'twister');
+% rng(2,'twister'); % hardcoded seeding
+rng(s);             % retrieve seeding from run_mpc
 
 w = [];
 
@@ -82,14 +83,14 @@ end
 if plot_noise == 1
     subplot(3,2,2)
     hold on
-    title('noise - x1')
+    title('noise - x1', 'Linewidth',0.8)
     plot(w(:,1), 'b')
     grid on
     hold off
 
     subplot(3,2,4)
     hold on
-    title('noise - x2')
+    title('noise - x2', 'Linewidth',0.8)
     plot(w(:,2), 'b')
     grid on
     hold off

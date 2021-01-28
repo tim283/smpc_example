@@ -1,4 +1,4 @@
-function [x, u, x1_limit, sig, beta] = run_mpc()
+function [x, u, x1_limit, sig, beta, s] = run_mpc()
 % (S)MPC setup by Tim Bruedigam
 % based on the nonlinear MPC routine by Gruene and Pannek (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
 % example system based on Lorenzen et al. 2017: Constraint-Tightening and Stability in Stochastic Model Predictive Control
@@ -77,6 +77,8 @@ function [x, u, x1_limit, sig, beta] = run_mpc()
     
     params = [x1_limit, plot_pause]; % parameters necessary for optimal control problem
 %     rng(2,'twister');               % seed selection: change to get different noise
+    rng('shuffle');                 % random seed
+    s = rng;                        % save rng setting
     
     % run mpc
     [t,x,u] = nmpc(@runningcosts, @terminalcosts, @constraints, ...
@@ -176,8 +178,7 @@ function y = system(t, x, u, T, apply_flag, sig)
         % Gaussian noise with variance sig^2
         w(1) = normrnd(0,sig);
         w(2) = normrnd(0,sig);
-        w;
-        % determine next state
+        % determine next state with uncertainty
         y = y + D*w;
     end
             
