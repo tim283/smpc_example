@@ -6,8 +6,8 @@ function [t, x, u] = nmpc(runningcosts, terminalcosts, ...
               varargin)              
 % nmpc.m routine by L. Gruene and J. Pannek (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
 
-% MPC optimization starts at line 313 
-% constraint tightening starts at line 430
+% MPC optimization starts at line 313
+% constraint tightening starts at line 430 
               
 % nmpc(runningcosts, terminalcosts, constraints, ...
 %      terminalconstraints, linearconstraints, system, ...
