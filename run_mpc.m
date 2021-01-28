@@ -64,7 +64,7 @@ function [x, u, x1_limit, sig, beta] = run_mpc()
     % optimizatoin options
     tol_opt       = 1e-8;
     opt_option    = 0;
-    iprint        = 10;
+    iprint        = 10;             % see nmpc.m line 81+
     type          = 'difference equation';
     atol_ode_real = 1e-12;
     rtol_ode_real = 1e-12;
@@ -76,7 +76,7 @@ function [x, u, x1_limit, sig, beta] = run_mpc()
 
     
     params = [x1_limit, plot_pause]; % parameters necessary for optimal control problem
-%     rng(2,'twister'); % seed selection: change to get different noise
+%     rng(2,'twister');               % seed selection: change to get different noise
     
     % run mpc
     [t,x,u] = nmpc(@runningcosts, @terminalcosts, @constraints, ...
@@ -122,7 +122,7 @@ function [c,ceq] = constraints(t, x, u, gamma, K, params)
     
     c   = [];
     
-    % input limitations (new input)
+    % input limitations (after input decomposition)
     c(end+1) = (u(1) - K*[x(1); x(2)]) - 0.2;
     c(end+1) = -(u(1) - K*[x(1); x(2)]) - 0.2;
     
@@ -217,12 +217,12 @@ end
 % Definition of output format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function printHeader()
-    fprintf('   k  |      u(k)        x(1)        x(2)     Time\n');
-    fprintf('--------------------------------------------------\n');
+    fprintf('   k  |       u(k)         x(1)        x(2)       Time   | Solver messages\n');
+    fprintf('--------------------------------------------------------------------------\n');
 end
 
 function printClosedloopData(mpciter, u, x, t_Elapsed)
-    fprintf(' %3d  | %+11.6f %+11.6f %+11.6f  %+6.3f', mpciter, ...
+    fprintf(' %3d  | %+11.3f %+11.2f %+11.2f      %+6.3f  |', mpciter, ...
             u(1,1) - [0.2858 -0.4910]*[x(1); x(2)], x(1), x(2), t_Elapsed);
 end
 
