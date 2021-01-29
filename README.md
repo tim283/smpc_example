@@ -22,4 +22,5 @@ If you find mistakes or have suggestions, feel free to contribute!
 
 ---
 [1] L. Grüne and J. Pannek. Nonlinear Model Predictive Control. Springer-Verlag, London, 2017.
+
 [2] T. Brüdigam. (Stochastic) Model Predictive Control -- a Simulation Example. arXiv: 2007.12430. 2021.
