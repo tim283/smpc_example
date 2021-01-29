@@ -437,7 +437,7 @@ function [c,ceq] = nonlinearconstraints(constraints, ...
     g = [1;0];              % constraint: g*x < h -> x1 < x1_limit
     K = [0.2858 -0.4910];   % stabilizing state feedback law
             
-    for k=1:N
+    for k=1:N               % k=1 refers to the initial state, so (technically) no state constraint necessary, but k=1 necessary for input constraint
         gamma = sqrt(2*g'*sigma_e(:,:,k)*g)*erfinv(2*beta-1);                   % constraint tightening
         [cnew, ceqnew] = constraints(t0+k*T,x(k,:),u(:,k), gamma, K, params);   % generate constraints
         c = [c cnew];
