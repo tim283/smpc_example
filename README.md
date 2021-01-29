@@ -5,7 +5,7 @@ This (S)MPC example consists of 3 matlab files:
 - plot_inputs_states.m: runs the MPC example and plots states and the input
 - nmpc.m: nonlinear MPC routine developed by Gruene/Pannek [1] (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
 
-SMPC_introduction.pdf serves as a brief introduction to the example and (S)MPC with probabilistic constraints (chance constraints).
+SMPC_introduction.pdf [2] serves as a brief introduction to the example and (S)MPC with probabilistic constraints (chance constraints).
 
 run_mpc.m allows simple changes to the (SMPC) algorithm (see lines 8 - 52). 
 The following options exist:
@@ -22,3 +22,4 @@ If you find mistakes or have suggestions, feel free to contribute!
 
 ---
 [1] L. Grüne and J. Pannek. Nonlinear Model Predictive Control. Springer-Verlag, London, 2017.
+[2] T. Brüdigam. (Stochastic) Model Predictive Control -- a Simulation Example. arXiv: 2007.12430. 2021.
