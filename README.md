@@ -1,11 +1,11 @@
 # smpc_example
 
-This (S)MPC example consists of 3 matlab files:
+This stochastic Model Predictive Control (SMPC) example consists of 3 matlab files:
 - run_mpc.m: runs the (S)MPC example
 - plot_inputs_states.m: runs the (S)MPC example and plots states and the input
 - nmpc.m: nonlinear MPC routine developed by Gruene/Pannek [1] (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
 
-SMPC_introduction.pdf [2] serves as a brief introduction to the example and (S)MPC with probabilistic constraints (chance constraints).
+SMPC_introduction.pdf [2] serves as a brief introduction to the example and SMPC with probabilistic constraints (chance constraints).
 
 run_mpc.m allows simple changes to the (S)MPC algorithm (see lines 8 - 52). 
 The following options exist:
