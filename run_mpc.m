@@ -266,7 +266,7 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         % - blue: current real position
         % - red: planned next position with optimized input
         % - orange: planned trajectory
-        hc = plot(x_intermediate(:,1),x_intermediate(:,2),'r:','Linewidth',0.5);         % connection current state to next predicted state
+        hc = plot(x_intermediate(:,1),x_intermediate(:,2),'r:','Linewidth',0.6);         % connection current state to next predicted state
         set(get(get(hc,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
         hb = plot(x_intermediate(1,1),x_intermediate(1,2),'ob', ...     % current state
              'MarkerFaceColor','b','MarkerSize',6);
