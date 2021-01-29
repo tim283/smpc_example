@@ -76,7 +76,7 @@ function [x, u, x1_limit, sig, beta, s] = run_mpc()
     params = [x1_limit, plot_pause]; % parameters necessary for optimal control problem
     
     % random number generator settings
-%     rng(2,'twister');               % seed selection: change to get different noise
+%     rng(30,'twister');               % seed selection: change to get different noise
     rng('shuffle');                 % random seed
     s = rng;                        % save rng setting
     
