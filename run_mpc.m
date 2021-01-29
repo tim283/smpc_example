@@ -201,6 +201,7 @@ function sigma_e = cov_propagation(N, sig)
 
     % initial covariance matrix
     sigma_e = zeros(2,2,N);
+    % sigma_e(:,:,1) is 0 matrix, i.e., '1' refers to current state, which is known
 
     % updated covariance matrix for each step
     for i = 2:N
