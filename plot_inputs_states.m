@@ -13,7 +13,7 @@ clf
 
 plot_noise = 1;         % plot noise? 0: no; 1: yes
 % if noise was not saved, automatically swich to 0
-if exist('s','var')
+if exist('s','var') == 0
     plot_noise = 0;
 end
 
@@ -77,7 +77,7 @@ hold off
 
 
 % plot noise (given seeding)
-% rng(2,'twister'); % hardcoded seeding
+% rng(30,'twister'); % hardcoded seeding
 rng(s);             % retrieve seeding from run_mpc
 
 w = [];
