@@ -12,6 +12,11 @@ figure(2)
 clf
 
 plot_noise = 1;         % plot noise? 0: no; 1: yes
+% if noise was not saved, automatically swich to 0
+if exist('s','var')
+    plot_noise = 0;
+end
+
 
 steps = 0:length(x)-1;  % get steps (last input is computed but not applied) 
 
