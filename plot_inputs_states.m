@@ -31,10 +31,13 @@ hold on
 title('state - x1')
 grid on
 plot(steps,x(:,1), 'b', 'Linewidth',0.8)
-yline(x1_limit, 'r', 'Linewidth',0.8)
-gamma1 = sqrt(2*[1;0]'*[sig^2 0; 0 sig^2]*[1;0])*erfinv(2*beta-1); % chance constraint addition for first predicted step
-yline(x1_limit-gamma1, 'r--', 'Linewidth',0.8)
-ylim([-0.5 x1_limit+0.5]);
+% plot constraint only if close enough
+if x1_limit < 40
+    yline(x1_limit, 'r', 'Linewidth',0.8)
+    ylim([-0.5 x1_limit+0.5]);
+    gamma1 = sqrt(2*[1;0]'*[sig^2 0; 0 sig^2]*[1;0])*erfinv(2*beta-1); % chance constraint addition for first predicted step
+    yline(x1_limit-gamma1, 'r--', 'Linewidth',0.8)
+end
 xlim([steps(1) steps(end)]);
 hold off
 
@@ -100,7 +103,9 @@ if plot_noise == 1
     % plot standard deviation
     yline(sig,'r:', 'Linewidth',0.8)
     yline(-sig,'r:', 'Linewidth',0.8)
-    ylim([-1.2*w_max 1.2*w_max])
+    if w_max > 0
+        ylim([-1.2*w_max 1.2*w_max])
+    end
     grid on
     hold off
     
@@ -111,7 +116,9 @@ if plot_noise == 1
     % plot standard deviation
     yline(sig,'r:', 'Linewidth',0.8)
     yline(-sig,'r:', 'Linewidth',0.8)
-    ylim([-1.2*w_max 1.2*w_max])
+    if w_max > 0
+        ylim([-1.2*w_max 1.2*w_max])
+    end
     grid on
     hold off
     
