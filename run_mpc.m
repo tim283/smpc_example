@@ -46,7 +46,7 @@ function [x, u, x1_limit, sig, beta, s] = run_mpc()
             x1_limit = 2.8;         % limit for x1 - (chance) constraint
             
         case 4  % SMPC, x1-constraint, uncertainty
-            sig = 0.18;             % sigma of Gaussian distribution -> covariance matrix with sigma^2 (here: uncertainty considered)
+            sig = 0.08;             % sigma of Gaussian distribution -> covariance matrix with sigma^2 (here: uncertainty considered)
             beta = 0.90;            % smpc risk parameter, [0.5 to 0.999] (here: high beta means low risk)
             x1_limit = 2.8;         % limit for x1 - (chance) constraint
             
