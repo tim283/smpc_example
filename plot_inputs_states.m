@@ -1,7 +1,7 @@
 % plot inputs and states 
 
 %% run smpc (runs new MPC simulation)
-[x,u, x1_limit, sig, beta, s]= run_mpc;
+[x,u, x1_limit, sig, beta, s, comp_time]= run_mpc;
 
 
 
@@ -11,11 +11,12 @@
 figure(2)
 clf
 
-plot_noise = 1;         % plot noise? 0: no; 1: yes
+plot_noise = 1;         % plot noise? 0: no; 1: yes (if yes: computation time will also be plotted)
 % if noise was not saved, automatically swich to 0
 if exist('s','var') == 0
     plot_noise = 0;
 end
+
 
 
 steps = 0:length(x)-1;  % get steps (last input is computed but not applied) 
@@ -109,7 +110,7 @@ if plot_noise == 1
     grid on
     hold off
     
-        subplot(3,2,4)
+    subplot(3,2,4)
     hold on
     title('noise - w2')
     plot(steps, w(:,2), 'b', 'Linewidth',0.8)
@@ -129,6 +130,13 @@ if plot_noise == 1
 %     subplot(3,2,3)
 %     hold on 
 %     plot(steps, w(:,2), 'b--', 'Linewidth',0.8)
+
+    subplot(3,2,6)
+    hold on
+    title('computation time (s)')
+    plot(steps, comp_time, 'b', 'Linewidth',0.8)
+    grid on
+    hold off
     
 end
 
