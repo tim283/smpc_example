@@ -3,6 +3,10 @@ function [x, u, x1_limit, sig, beta, s, comp_time] = run_mpc(varargin)
 % based on the nonlinear MPC routine by Gruene and Pannek (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
 % example system based on Lorenzen et al. 2017: Constraint-Tightening and Stability in Stochastic Model Predictive Control
 
+% function use:
+% - standard: run_mpc()    with standard parameters as defined below
+% - specific: run_mpc(N, beta, sigma, x1_limit, [x_initial])    with specific parameters
+
     clearvars -except varargin;
     close all;
     
