@@ -1,9 +1,13 @@
-function [x, u, x1_limit, sig, beta, s, comp_time] = run_mpc()
+function [x, u, x1_limit, sig, beta, s, comp_time] = run_mpc(varargin)
 % (S)MPC setup by Tim Bruedigam
 % based on the nonlinear MPC routine by Gruene and Pannek (details: http://numerik.mathematik.uni-bayreuth.de/~lgruene/nmpc-book/matlab_nmpc.html)
 % example system based on Lorenzen et al. 2017: Constraint-Tightening and Stability in Stochastic Model Predictive Control
 
-    clear all;
+% function use:
+% - standard: run_mpc()    with standard parameters as defined below
+% - specific: run_mpc(N, beta, sigma, x1_limit, [x_initial])    with specific parameters
+
+    clearvars -except varargin;
     close all;
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -59,6 +63,35 @@ function [x, u, x1_limit, sig, beta, s, comp_time] = run_mpc()
     %%%% no more changes necessary in the following %%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % use function arguments if available (for monte carlo simulations)
+    % !! overwrites previous settings !!
+    % argument order: N, beta, sig, x1_limit, [x_initial], u_bound
+    if (nargin>=1)
+        N = varargin{1};
+    end
+    if (nargin>=2)
+        beta = varargin{2};
+    end
+    if (nargin>=3)
+        sig = varargin{3};
+    end
+    if (nargin>=4)
+        x1_limit = varargin{4};
+    end
+    if (nargin>=5)
+        pseudo_xmeasure = varargin{5};
+        xmeasure(1) = pseudo_xmeasure(1);
+        xmeasure(2) = pseudo_xmeasure(2);
+    end
+    if (nargin>=6)
+        % input limitation, not available yet
+        disp('input limitation argument not available yet')
+    end
+    if (nargin>=7)
+        disp('argument number limit exceeded')
+    end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
     % optimizatoin options
