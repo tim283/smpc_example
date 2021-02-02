@@ -288,7 +288,7 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
             set(get(get(h2,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
             
             % start
-            h3 = plot(x_intermediate(1,1),x_intermediate(1,2),'ob','MarkerSize',10, 'linewidth',0.5);
+            h3 = plot(x_intermediate(1,1),x_intermediate(1,2),'ob','MarkerSize',10, 'linewidth',0.6);
             set(get(get(h3,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
             % target point
             h4 = plot(0,0,'kx','MarkerSize',12, 'linewidth',2);
@@ -298,8 +298,8 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         % trajectory: 
         % - blue: current real position
         % - red: planned next position with optimized input
-        % - magenta: planned trajectory
-        hc = plot(x_intermediate(:,1),x_intermediate(:,2),'r--');         % connection current state to next predicted state
+        % - orange: planned trajectory
+        hc = plot(x_intermediate(:,1),x_intermediate(:,2),'r:','Linewidth',0.6);         % connection current state to next predicted state
         set(get(get(hc,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
         hb = plot(x_intermediate(1,1),x_intermediate(1,2),'ob', ...     % current state
              'MarkerFaceColor','b','MarkerSize',6);
@@ -309,7 +309,7 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         axis square;
         
         % mark positions with constraint violation
-        if x_intermediate(1,1) > params(1)
+        if x_intermediate(1,1) > params(1)+0.000001  % account for numerical uncertainty
             he = plot(x_intermediate(1,1),x_intermediate(1,2),'ow','MarkerSize',3, 'MarkerFaceColor','w');
             set(get(get(he,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
         end
@@ -321,7 +321,7 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         for i = 2:length(u)
             x_pred(i,:) = system(0, x_pred(i-1,:), u(1,i-1), T, 0);
         end        
-        hm = plot(x_pred(:,1),x_pred(:,2),'mx-','Linewidth',0.5, 'Markersize', 9);
+        hm = plot(x_pred(:,1),x_pred(:,2),'m*-','Linewidth',0.5, 'Markersize', 7, 'Color', [1,0.4,0]);
         
         % legend (only once)
         if t0 == 0
