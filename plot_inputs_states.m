@@ -18,7 +18,6 @@ if exist('s','var') == 0
 end
 
 
-
 steps = 0:length(x)-1;  % get steps (last input is computed but not applied) 
 
 
