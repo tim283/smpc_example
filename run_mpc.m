@@ -331,6 +331,7 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         % pause if necessary
         pause(params(2))
         
+        
         % delete predicted inputs
         children = get(gca, 'children');
         delete(children(1));
