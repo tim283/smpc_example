@@ -352,7 +352,7 @@ function [t, x, u, comp_time] = nmpc(runningcosts, terminalcosts, ...
         % Step (3) of the NMPC algorithm:
         %   Apply control to process
         [tmeasure, xmeasure] = applyControl(system, T, t0, x0, u_new, ...
-            atol_ode_real, rtol_ode_real, type, sig);
+            atol_ode_real, rtol_ode_real, type, sig, params);
         mpciter = mpciter+1;
     end
 end
@@ -363,10 +363,10 @@ function [t0, x0] = measureInitialValue ( tmeasure, xmeasure )
 end
 
 function [tapplied, xapplied] = applyControl(system, T, t0, x0, u, ...
-                                atol_ode_real, rtol_ode_real, type, sig)
+                                atol_ode_real, rtol_ode_real, type, sig, params)
     apply_flag = 1; % for prediction, no noise is applied (=0); for actual system noise is applied (=1)
     xapplied = dynamic(system, T, t0, x0, u(:,1), ...
-                       atol_ode_real, rtol_ode_real, type, apply_flag, sig);
+                       atol_ode_real, rtol_ode_real, type, apply_flag, sig, params);
     tapplied = t0+T;
 end
 
@@ -380,7 +380,7 @@ function [u, V, exitflag, output] = solveOptimalControlProblem ...
     atol_ode_sim, rtol_ode_sim, tol_opt, options, type)
     x = zeros(N+1, length(x0));
     x = computeOpenloopSolution(system, N, T, t0, x0, u0, ...
-                                atol_ode_sim, rtol_ode_sim, type, sig);
+                                atol_ode_sim, rtol_ode_sim, type, sig, params);
 
     % Set control and linear bounds
     A = [];
@@ -403,7 +403,7 @@ function [u, V, exitflag, output] = solveOptimalControlProblem ...
     % Solve optimization problem
     [u, V, exitflag, output] = fmincon(@(u) costfunction(runningcosts, ...
         terminalcosts, system, N, T, t0, x0, ...
-        u, atol_ode_sim, rtol_ode_sim, type, sig), u0, A, b, Aeq, beq, lb, ...
+        u, atol_ode_sim, rtol_ode_sim, type, sig, params), u0, A, b, Aeq, beq, lb, ...
         ub, @(u) nonlinearconstraints(constraints, terminalconstraints, ...
         system, cov_propagation, N, T, t0, x0, u, sig, beta, params, ...
         atol_ode_sim, rtol_ode_sim, type), options);
@@ -411,11 +411,11 @@ end
 
 function cost = costfunction(runningcosts, terminalcosts, system, ...
                     N, T, t0, x0, u, ...
-                    atol_ode_sim, rtol_ode_sim, type, sig)
+                    atol_ode_sim, rtol_ode_sim, type, sig, params)
     cost = 0;
     x = zeros(N+1, length(x0));
     x = computeOpenloopSolution(system, N, T, t0, x0, u, ...
-                                atol_ode_sim, rtol_ode_sim, type, sig);
+                                atol_ode_sim, rtol_ode_sim, type, sig, params);
     for k=1:N
         cost = cost+runningcosts(t0+k*T, x(k,:), u(:,k));
     end
@@ -427,7 +427,7 @@ function [c,ceq] = nonlinearconstraints(constraints, ...
     N, T, t0, x0, u, sig, beta, params, atol_ode_sim, rtol_ode_sim, type)
     x = zeros(N+1, length(x0));
     x = computeOpenloopSolution(system, N, T, t0, x0, u, ...
-                                atol_ode_sim, rtol_ode_sim, type, sig);
+                                atol_ode_sim, rtol_ode_sim, type, sig, params);
     c = [];
     ceq = [];
         
@@ -459,24 +459,24 @@ end
 
 
 function x = computeOpenloopSolution(system, N, T, t0, x0, u, ...
-                                     atol_ode_sim, rtol_ode_sim, type, sig)
+                                     atol_ode_sim, rtol_ode_sim, type, sig, params)
     x(1,:) = x0;
     for k=1:N
         x(k+1,:) = dynamic(system, T, t0, x(k,:), u(:,k), ...
-                             atol_ode_sim, rtol_ode_sim, type, 0, sig);
+                             atol_ode_sim, rtol_ode_sim, type, 0, sig, params);
     end
 end
 
 function [x, t_intermediate, x_intermediate] = dynamic(system, T, t0, ...
-             x0, u, atol_ode, rtol_ode, type, apply_flag, sig)
+             x0, u, atol_ode, rtol_ode, type, apply_flag, sig, params)
     if ( strcmp(type, 'difference equation') )
-        x = system(t0, x0, u, T, apply_flag, sig);
+        x = system(t0, x0, u, T, apply_flag, sig, params);
         x_intermediate = [x0; x];
         t_intermediate = [t0, t0+T];
     elseif ( strcmp(type, 'differential equation') )
         options = odeset('AbsTol', atol_ode, 'RelTol', rtol_ode);
         [t_intermediate,x_intermediate] = ode45(system, ...
-            [t0, t0+T], x0, options, u, apply_flag, sig);
+            [t0, t0+T], x0, options, u, apply_flag, sig, params);
         x = x_intermediate(size(x_intermediate,1),:);
     end
 end
