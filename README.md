@@ -12,6 +12,7 @@ SMPC_introduction.pdf [2] serves as a brief introduction to the example and SMPC
 run_mpc.m allows simple changes to the (SMPC) algorithm (see lines 13 - 64). 
 
 The following options exist:
+0) no MPC, no constraint, no uncertainty (MPC input set to 0; only stabilizing feedback matrix K)
 1) MPC without constraint;  no uncertainty
 2) MPC with constraint;  no uncertainty
 3) MPC with constraint;  uncertainty

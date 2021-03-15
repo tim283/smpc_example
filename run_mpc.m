@@ -26,13 +26,19 @@ function [x, u, x1_limit, sig, beta, s, comp_time] = run_mpc(varargin)
 
 
     % choose MPC design    
-    mpc_case = 4; % MPC design (specifics below, e.g., variance, risk parameter)
+    mpc_mode = 4; % MPC design (specifics below, e.g., variance, risk parameter)
+    % 0) no MPC, no constraint, no uncertainty (MPC input set to 0; only stabilizing feedback matrix K)
     % 1) MPC,  no constraint, no uncertainty
     % 2) MPC,  x1-constraint, no uncertainty
     % 3) MPC,  x1-constraint, uncertainty
     % 4) SMPC, x1-constraint, uncertainty
     
-    switch mpc_case
+    switch mpc_mode
+        
+        case 0  % no MPC (MPC input set to 0),  no constraint, no uncertainty
+            sig = 0.00;             % sigma of Gaussian distribution -> covariance matrix with sigma^2 (here: no uncertainty)
+            beta = 0.50;            % smpc risk parameter, [0.5 to 0.999] (here: 0.50 means no SMPC constraint tightening)
+            x1_limit = 50;         % limit for x1 - (chance) constraint (here: inactive limit, too far to the right)
         
         case 1  % MPC,  no constraint, no uncertainty
             sig = 0.00;             % sigma of Gaussian distribution -> covariance matrix with sigma^2 (here: no uncertainty)
@@ -106,7 +112,7 @@ function [x, u, x1_limit, sig, beta, s, comp_time] = run_mpc(varargin)
         
     tmeasure      = 0.0;            % initial time (do not change)
         
-    params = [x1_limit, plot_pause]; % parameters necessary for optimal control problem
+    params = [x1_limit, plot_pause, mpc_mode]; % parameters necessary for optimal control problem
     
     % random number generator settings
 %     rng(30,'twister');               % seed selection: change to get different noise
@@ -187,7 +193,7 @@ end
 
 
 
-function y = system(t, x, u, T, apply_flag, sig)
+function y = system(t, x, u, T, apply_flag, sig, params)
     % apply_flag: 1) noise is applied for real system; 0) no noise for prediction
 
     % system matrices
@@ -199,6 +205,11 @@ function y = system(t, x, u, T, apply_flag, sig)
 %     R = 1;
 %     K = dlqr(A,B,Q,R);
     K = [0.2858 -0.4910];
+    
+    % for mpc_mode=0, set u(1,1)=0 (only stabilizing feedback matrix K)
+    if params(3) == 0 % (mpc_mode==0)
+        u(1,1) = 0;
+    end
     
     % determine next (prediction step) state
     y = A*x'+B*(u(1,1) - K*[x(1); x(2)]);
@@ -265,7 +276,7 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
                      
                       
     [x, t_intermediate, x_intermediate] = dynamic(system, T, t0, ...
-                                          x0, u, atol_ode, rtol_ode, type, 0, 0);
+                                          x0, u, atol_ode, rtol_ode, type, 0, 0, params);
                                       
     % set up figure
     figure(1);
@@ -307,6 +318,11 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
              'MarkerFaceColor','r');
         axis([-2.5 6.0 -2 6.5]);
         axis square;
+%         axis equal;
+        if params(3) == 0 % (no MPC, mpc_mode==0) 
+            axis([-2.5 12.0 -2 6.5]); % if u==0 --> system moves farther in x1-direction
+            axis equal;
+        end
         
         % mark positions with constraint violation
         if x_intermediate(1,1) > params(1)+0.000001  % account for numerical uncertainty
@@ -319,13 +335,17 @@ function plotTrajectories(dynamic, system, T, t0, x0, u, ...
         x_pred = zeros(length(u), length(x));
         x_pred(1,:) = x0;        
         for i = 2:length(u)
-            x_pred(i,:) = system(0, x_pred(i-1,:), u(1,i-1), T, 0);
+            x_pred(i,:) = system(0, x_pred(i-1,:), u(1,i-1), T, 0, 0, params);
         end        
         hm = plot(x_pred(:,1),x_pred(:,2),'m*-','Linewidth',0.5, 'Markersize', 7, 'Color', [1,0.4,0]);
         
         % legend (only once)
         if t0 == 0
-            legend([hb,hr,hm],{'real state','next predicted step','prediction'},'Location','northwest', 'FontSize',10,'AutoUpdate','off')
+            if params(3) == 0 % (no MPC, mpc_mode==0) 
+                legend([hb,hr,hm],{'real state','next predicted step','prediction'},'Location','southeast', 'FontSize',10,'AutoUpdate','off')
+            else
+                legend([hb,hr,hm],{'real state','next predicted step','prediction'},'Location','northwest', 'FontSize',10,'AutoUpdate','off')
+            end
         end
         
         % pause if necessary
