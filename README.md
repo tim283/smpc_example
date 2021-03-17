@@ -1,8 +1,6 @@
 # smpc_example
 
----------------------------------------------------------------------------------------------
-If you just want to quickly run (S)MPC examples, use 'run_examples.m' and select an MPC mode.
----------------------------------------------------------------------------------------------
+**If you just want to quickly run (S)MPC examples, use 'run_examples.m' and select an MPC mode.**
 
 
 This stochastic Model Predictive Control (SMPC) example consists of 4 matlab files:
@@ -14,9 +12,10 @@ This stochastic Model Predictive Control (SMPC) example consists of 4 matlab fil
 SMPC_introduction.pdf [2] serves as a brief introduction to the example and SMPC with probabilistic constraints (chance constraints).
 
 
-run_mpc.m allows simple changes to the (SMPC) algorithm (see lines 13 - 68). 
+run_mpc.m allows to run predefined MPC modes or to make simple changes to the (SMPC) algorithm (see lines 13 - 68). 
 
-The following options exist:
+The following predefined options exist:
+
 0) no MPC, no constraint, no uncertainty (MPC input set to 0; only stabilizing feedback matrix K)
 1) MPC without constraint;  no uncertainty
 2) MPC with constraint;  no uncertainty
