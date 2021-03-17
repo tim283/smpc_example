@@ -5,7 +5,7 @@ function [x, u, x1_limit, sig, beta, s, comp_time] = run_mpc(varargin)
 
 % function use:
 % - standard: run_mpc()    with standard parameters as defined below
-% - specific: run_mpc(N, beta, sigma, x1_limit, [x_initial])    with specific parameters
+% - specific: run_mpc(mpc_mode, N, beta, sigma, x1_limit, [x_initial])    with specific parameters
 
     clearvars -except varargin;
     close all;
@@ -32,6 +32,11 @@ function [x, u, x1_limit, sig, beta, s, comp_time] = run_mpc(varargin)
     % 2) MPC,  x1-constraint, no uncertainty
     % 3) MPC,  x1-constraint, uncertainty
     % 4) SMPC, x1-constraint, uncertainty
+    
+    % MPC mode override if indicated by function argument
+    if (nargin>=1)
+        mpc_mode = varargin{1};
+    end
     
     switch mpc_mode
         
@@ -73,28 +78,28 @@ function [x, u, x1_limit, sig, beta, s, comp_time] = run_mpc(varargin)
     % use function arguments if available (for monte carlo simulations)
     % !! overwrites previous settings !!
     % argument order: N, beta, sig, x1_limit, [x_initial], u_bound
-    if (nargin>=1)
-        N = varargin{1};
-    end
     if (nargin>=2)
-        beta = varargin{2};
+        N = varargin{2};
     end
     if (nargin>=3)
-        sig = varargin{3};
+        beta = varargin{3};
     end
     if (nargin>=4)
-        x1_limit = varargin{4};
+        sig = varargin{4};
     end
     if (nargin>=5)
-        pseudo_xmeasure = varargin{5};
+        x1_limit = varargin{5};
+    end
+    if (nargin>=6)
+        pseudo_xmeasure = varargin{6};
         xmeasure(1) = pseudo_xmeasure(1);
         xmeasure(2) = pseudo_xmeasure(2);
     end
-    if (nargin>=6)
+    if (nargin>=7)
         % input limitation, not available yet
         disp('input limitation argument not available yet')
     end
-    if (nargin>=7)
+    if (nargin>=8)
         disp('argument number limit exceeded')
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
